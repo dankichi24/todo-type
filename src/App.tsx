@@ -45,19 +45,6 @@ export const App = () => {
     });
   };
 
-  const handleRemove = (id: number, removed: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, removed };
-        }
-        return todo;
-      });
-
-      return newTodos;
-    });
-  };
-
   const handleCheck = (id: number, checked: boolean) => {
     setTodos((todos) => {
       const newTodos = todos.map((todo) => {
@@ -71,8 +58,25 @@ export const App = () => {
     });
   };
 
+  const handleRemove = (id: number, removed: boolean) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, removed };
+        }
+        return todo;
+      });
+
+      return newTodos;
+    });
+  };
+
   const handleSort = (filter: Filter) => {
     setFilter(filter);
+  };
+
+  const handleEmpty = () => {
+    setTodos((todos) => todos.filter((todo) => !todo.removed));
   };
 
   const filteredTodos = todos.filter((todo) => {
@@ -99,27 +103,28 @@ export const App = () => {
         <option value="all">すべてのタスク</option>
         <option value="checked">完了したタスク</option>
         <option value="unchecked">現在のタスク</option>
-        <option value=" removed">ゴミ箱</option>
+        <option value="removed">ごみ箱</option>
       </select>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
-        <input
-          type="text"
-          value={text}
-          disabled={filter === "checked" || filter === "removed"}
-          onChange={(e) => handleChange(e)}
-        />
-        <input
-          type="submit"
-          value="追加"
-          disabled={filter === "checked" || filter === "removed"}
-          onSubmit={handleSubmit}
-        />
-      </form>
+      {filter === "removed" ? (
+        <button
+          onClick={handleEmpty}
+          disabled={todos.filter((todo) => todo.removed).length === 0}
+        >
+          ごみ箱を空にする
+        </button>
+      ) : (
+        filter !== "checked" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            <input type="text" value={text} onChange={(e) => handleChange(e)} />
+            <input type="submit" value="追加" onSubmit={handleSubmit} />
+          </form>
+        )
+      )}
       <ul>
         {filteredTodos.map((todo) => {
           return (
