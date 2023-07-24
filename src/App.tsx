@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-import { GlobalStyles } from "@mui/material";
+import GlobalStyles from "@mui/material/GlobalStyles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { indigo, pink } from "@mui/material/colors";
 
-import { FormDialog } from "./FormDialog";
-import { ActionButton } from "./ActionButton";
+import { ToolBar } from "./ToolBar";
 import { SideBar } from "./SideBar";
 import { TodoItem } from "./TodoItem";
-import { ToolBar } from "./ToolBar";
+import { FormDialog } from "./FormDialog";
+import { ActionButton } from "./ActionButton";
 
 const theme = createTheme({
   palette: {
@@ -30,18 +30,29 @@ export const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleToggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleToggleDialog = () => {
+    setDialogOpen((dialogOpen) => !dialogOpen);
+    setText("");
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setText(e.target.value);
   };
 
   const handleSubmit = () => {
-    if (!text) return;
+    if (!text) {
+      setDialogOpen((dialogOpen) => !dialogOpen);
+      return;
+    }
 
     const newTodo: Todo = {
       value: text,
@@ -52,6 +63,7 @@ export const App = () => {
 
     setTodos((todos) => [newTodo, ...todos]);
     setText("");
+    setDialogOpen((dialogOpen) => !dialogOpen);
   };
 
   const handleTodo = <K extends keyof Todo, V extends Todo[K]>(
@@ -89,7 +101,13 @@ export const App = () => {
         onSort={handleSort}
         onToggleDrawer={handleToggleDrawer}
       />
-      <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
+      <FormDialog
+        text={text}
+        dialogOpen={dialogOpen}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        onToggleDialog={handleToggleDialog}
+      />
       <TodoItem todos={todos} filter={filter} onTodo={handleTodo} />
       <ActionButton todos={todos} onEmpty={handleEmpty} />
     </ThemeProvider>
