@@ -4,7 +4,7 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const FromDialog = (props: Props) => (
+export const FormDialog = (props: Props) => (
   <form
     onSubmit={(e) => {
       e.preventDefault();
