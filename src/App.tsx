@@ -4,10 +4,10 @@ import { GlobalStyles } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { indigo, pink } from "@mui/material/colors";
 
-import { FromDialog } from "./component/FromDialog";
-import { ActionButton } from "./component/AcionButton";
-import { SideBar } from "./component/SideBar";
-import { TodoItem } from "./component/TodoItem";
+import { FormDialog } from "./FormDialog";
+import { ActionButton } from "./ActionButton";
+import { SideBar } from "./SideBar";
+import { TodoItem } from "./TodoItem";
 import { ToolBar } from "./ToolBar";
 
 const theme = createTheme({
@@ -29,6 +29,12 @@ export const App = () => {
   const [text, setText] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleToggleDrawer = () => {
+    setDrawerOpen((drawerOpen) => !drawerOpen);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -77,9 +83,13 @@ export const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
-      <ToolBar filter={filter} />
-      <SideBar onsort={handleSort} />
-      <FromDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
+      <ToolBar filter={filter} onToggleDrawer={handleToggleDrawer} />
+      <SideBar
+        drawerOpen={drawerOpen}
+        onSort={handleSort}
+        onToggleDrawer={handleToggleDrawer}
+      />
+      <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
       <TodoItem todos={todos} filter={filter} onTodo={handleTodo} />
       <ActionButton todos={todos} onEmpty={handleEmpty} />
     </ThemeProvider>

@@ -7,9 +7,10 @@ import IconButton from "@mui/material/IconButton";
 
 type Props = {
   filter: Filter;
+  onToggleDrawer: () => void;
 };
 
-export const translator = (arg: Filter) => {
+export const Translator = (arg: Filter) => {
   switch (arg) {
     case "all":
       return "すべてのタスク";
@@ -34,10 +35,11 @@ export const ToolBar = (props: Props) => (
           edge="start"
           color="inherit"
           sx={{ mr: 2 }}
+          onClick={props.onToggleDrawer}
         >
           <Icon>menu</Icon>
         </IconButton>
-        <Typography>{translator(props.filter)}</Typography>
+        <Typography>{Translator(props.filter)}</Typography>
       </Toolbar>
     </AppBar>
   </Box>
